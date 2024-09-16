@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile Page</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .profile-container {
+            background-color: #fff;
+            width: 100%;
+            max-width: 800px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #0a66c2;
+            margin-right: 20px;
+        }
+
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .profile-info h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .profile-info h2 {
+            margin: 5px 0 15px;
+            font-size: 18px;
+            font-weight: 400;
+            color: #5a5a5a;
+        }
+
+        .profile-info .job-title {
+            font-size: 16px;
+            font-weight: 400;
+            color: #2b2b2b;
+        }
+
+        .edit-profile-btn {
+            background-color: #000000;
+            color: white;
+            border: none;
+            width: 120px;
+            padding: 12px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 15px;
+            margin-top: 10px;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px 0;
+            background-color: #fff;
+            border-top: 1px solid #e0e0e0;
+            margin-top: 20px;
+        }
+
+        .stats div {
+            text-align: center;
+        }
+
+        .stats div h4 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .stats div p {
+            margin: 0;
+            font-size: 14px;
+            color: #5a5a5a;
+        }
+
+        .profile-tabs {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .profile-tabs button {
+            background-color: transparent;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #5a5a5a;
+            border-bottom: 2px solid transparent;
+        }
+
+        .profile-tabs button.active {
+            border-bottom: 2px solid #333;
+            color: #333;
+        }
+
+        .grid-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            grid-gap: 10px;
+            margin-top: 20px;
+        }
+
+        .grid-item {
+            width: 100%;
+            padding-top: 100%;
+            position: relative;
+            background-color: #ddd;
+        }
+
+        .grid-item img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+
+<div class="profile-container">
+    <div class="profile-header">
+        <img src="{{user['pfp']}}" alt="Profile Picture" class="profile-pic">
+        <div class="profile-info">
+            <h1>{{user["name"]}}</h1>
+            <h2>Software Engineer | San Francisco, CA</h2>
+            <button class="edit-profile-btn">Edit Profile</button>
+        </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="stats">
+        <div>
+            <h4>{{user['connections']}}</h4>
+            <p>Connections</p>
+        </div>
+        <div>
+            <h4>{{user['posts']}}</h4>
+            <p>Posts</p>
+        </div>
+        <div>
+            <h4>0</h4>
+            <p>Publications</p>
+        </div>
+    </div>
+
+    <div class="profile-tabs">
+        <button id="posts-tab" class="active">Posts</button>
+        <button id="publications-tab">Publications</button>
+    </div>
+
+    <div id="posts-section" class="grid-section">
+        {% for post in posts %}
+        <div class="grid-item"><img src="{{post['link']}}"></div>
+        {% endfor %}
+    </div>
+
+    <div id="publications-section" class="grid-section" style="display: none;">
+    </div>
+</div>
+
+<script>
+    const postsTab = document.getElementById('posts-tab');
+    const publicationsTab = document.getElementById('publications-tab');
+    const postsSection = document.getElementById('posts-section');
+    const publicationsSection = document.getElementById('publications-section');
+
+    postsTab.addEventListener('click', () => {
+        postsTab.classList.add('active');
+        publicationsTab.classList.remove('active');
+        postsSection.style.display = 'grid';
+        publicationsSection.style.display = 'none';
+    });
+
+    publicationsTab.addEventListener('click', () => {
+        publicationsTab.classList.add('active');
+        postsTab.classList.remove('active');
+        postsSection.style.display = 'none';
+        publicationsSection.style.display = 'grid';
+    });
+</script>
+
+</body>
+</html>
