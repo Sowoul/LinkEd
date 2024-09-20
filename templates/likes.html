@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="main-container">
+    <div class="liked-posts-container" id="likedPosts">
+        {% for post in posts %}
+        <div class="post">
+            <div class="post-header">
+                <img src="{{ post.pfp }}" alt="{{ post.name }}" class="post-user-image">
+                <span class="post-username">{{ post.name }}</span>
+            </div>
+            {% if post.content %}
+            <div class="post-content">{{ post.content }}</div>
+            {% endif %}
+            <img src="{{ post.link }}" alt="Post image" class="post-image" style="object-fit: cover;">
+            <div class="post-actions">
+                <span class="post-action"><i class="fas fa-heart" onclick="unlikePost('{{post.id}}')"></i> <span id="likes-{{ post.id }}">{{ post.likes }}</span></span>
+                <span class="post-action"><i class="far fa-comment"></i> Comment</span>
+                <span class="post-action"><i class="far fa-share-square"></i> Share</span>
+            </div>
+        </div>
+        {% else %}
+        <p>No liked posts yet.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    function unlikePost(postId) {
+        console.log('asdas')
+        fetch('/like_post', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `post_id=${postId}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
+{% endblock %}

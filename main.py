@@ -1,14 +1,15 @@
 from flask import Flask
 from flask_migrate import Migrate
 
+from socket_handler import socket
+
 migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
     app.config["SECRET_KEY"] = "IDK123"
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite3"
-    from models import User, db
-    from socket_handler import socket
+    from models import User, db, Post
     db.init_app(app)
     socket.init_app(app)
     migrate.init_app(app, db)
@@ -21,4 +22,4 @@ def create_app():
 
 if __name__ == '__main__':
     app = create_app()
-    app.run(port=8080, debug=True)
+    socket.run(app=app,port=8080, debug=True)

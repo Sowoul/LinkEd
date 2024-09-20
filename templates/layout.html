@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkED</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #eb3471;
+            --background-color: #f8f9fa;
+            --text-color: #333;
+            --border-color: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            color: var(--text-color);
+            padding-bottom: 60px;
+            overflow-x: hidden;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: #ffffff;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            animation: slideDown 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .main-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 80px;
+            margin-bottom: 0;
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            max-width: 1200px;
+            margin: 80px auto 0;
+            padding: 0 20px;
+        }
+
+        .posts-container {
+            width: 100%;
+            max-width: 500px;
+            background-color: transparent;
+        }
+
+        .post {
+            background-color: #fff;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: fadeInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s ease;
+        }
+
+        .post:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .post-user-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 15px;
+            object-fit: cover;
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .post-user-image:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .post-username {
+            font-weight: 500;
+        }
+
+        .post-image {
+            max-height: 600px;
+            width: 100%;
+            object-fit: cover;
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .post-image:hover {
+            transform: scale(1.05);
+        }
+
+        .post-content {
+            padding: 15px;
+            line-height: 1.5;
+        }
+
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #ffffff;
+            box-shadow: 0 -1px 2px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            z-index: 1000;
+            animation: slideUp 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .nav-icon {
+            font-size: 22px;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: color 0.3s ease, transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .nav-icon:hover {
+            color: var(--primary-color);
+            transform: translateY(-5px) scale(1.1);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            opacity: 0;
+            transition: opacity 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transform: scale(0.8) translateY(-50px);
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .modal.open {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+        }
+
+        .modal.open .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .modal-close {
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .modal-close:hover {
+            transform: rotate(90deg) scale(1.2);
+        }
+
+        input[type="text"], textarea, input[type="file"] {
+            width: 95%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.3s ease, transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        input[type="text"]:focus, textarea:focus, input[type="file"]:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            transform: translateY(-2px);
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease, transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-3px) scale(1.05);
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .post-action {
+            color: #65676b;
+            font-size: 14px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .post-action:hover {
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+                align-items: center;
+                padding: 0 10px;
+            }
+
+            .connections {
+                width: 100%;
+                max-width: 600px;
+                margin-left: 0;
+                margin-top: 20px;
+            }
+
+            .posts-container {
+                max-width: 100%;
+            }
+        }
+        .close-btn {
+            background: none;
+            color:black;
+            border: none;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            float: right;
+        }
+
+        .close-btn:hover {
+            transform: rotate(90deg) scale(1.2);
+            background-color: transparent;
+        }
+
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <div class="header">
+        <div class="logo">LinkED</div>
+    </div>
+
+    {% block content %}{% endblock %}
+
+    <div class="bottom-nav">
+        <div class="nav-icon" id="home"><i class="fas fa-home"></i></div>
+        <div class="nav-icon" id="bottom-search"><i class="fas fa-search"></i></div>
+        <div class="nav-icon" id="add-post"><i class="fas fa-plus-square"></i></div>
+        <div class="nav-icon" id="liked"><i class="fas fa-heart"></i></div>
+        <div class="nav-icon" id="profile"><i class="fas fa-user"></i></div>
+    </div>
+
+    <div id="postModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" aria-label="Close">&times;</button>
+            <h2>Create a New Post</h2>
+            <textarea id="postContent" placeholder="Write your post content..."></textarea>
+            <input type="file" id="postFiles" multiple accept="image/*">
+            <button id="submitPost">Submit Post</button>
+        </div>
+    </div>
+    
+    <div id="searchModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" aria-label="Close">&times;</button>
+            <h2>Search</h2>
+            <input type="text" id="searchInput" placeholder="Search...">
+            <button id="searchButton">Search</button>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add("open");
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove("open");
+        }
+        document.querySelectorAll(".close-btn").forEach(button => {
+            button.addEventListener("click", function() {
+                const modal = this.closest(".modal");
+                closeModal(modal.id);
+            });
+        });
+
+        function submitPost() {
+            const postContent = document.getElementById("postContent").value;
+            const postFiles = document.getElementById("postFiles").files;
+
+            if (postFiles.length === 0) {
+                alert("Please select at least one file to upload.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("content", postContent);
+            for (let i = 0; i < postFiles.length; i++) {
+                formData.append("files", postFiles[i]);
+            }
+
+            fetch("/add_post", {
+                method: "POST",
+                body: formData,
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.status === 'success') {
+                    alert("Post added successfully");
+                    closeModal("postModal");
+                    loadFeed();
+                } else {
+                    alert("Failed to add post: " + data.error);
+                }
+            })
+            .catch((error) => console.error("Error adding post:", error));
+        }
+
+        function submitSearch() {
+            const searchTerm = document.getElementById("searchInput").value;
+            if (searchTerm) {
+                searchUser(searchTerm);
+            }
+        }
+
+        document
+            .getElementById("add-post")
+            .addEventListener("click", function () {
+                openModal("postModal");
+            });
+
+        document
+            .getElementById("bottom-search")
+            .addEventListener("click", function () {
+                openModal("searchModal");
+            });
+        document
+            .getElementById("profile")
+            .addEventListener("click", function () {
+                window.location="/profile"
+            });
+        document
+            .getElementById("liked")
+            .addEventListener("click", function () {
+                window.location="/likes"
+            });
+        document
+            .getElementById("home")
+            .addEventListener("click", function () {
+                window.location="/home"
+            });
+
+        document.getElementById("submitPost").addEventListener("click", submitPost);
+        document.getElementById("searchButton").addEventListener("click", submitSearch);
+    </script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>
