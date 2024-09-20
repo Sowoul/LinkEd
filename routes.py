@@ -11,9 +11,9 @@ from cloudinary.utils import cloudinary_url
 main_routes = Blueprint('main_routes', __name__)
 
 cloudinary.config( 
-    cloud_name = "dozuzq97z", 
-    api_key = "837641246728126", 
-    api_secret = "pxwX-qu7seTGZB_5p6IAaH_lKzU",
+    cloud_name = CLOUDINARY_CLOUD_NAME, 
+    api_key = CLOUDINARY_API_KEY, 
+    api_secret = CLOUDINARY_API_SECRET,
     secure=True
 )
 
