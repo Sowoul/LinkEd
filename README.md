@@ -45,7 +45,8 @@ LinkED is a feature-rich social media web application built with Flask, allowing
 
 ## Demo
 
-![LinkED Screenshot]()
+![Uploading image.png…]()
+
 
 *Replace the above URL with an actual screenshot of your application.*
 
