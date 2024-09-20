@@ -45,7 +45,7 @@ LinkED is a feature-rich social media web application built with Flask, allowing
 
 ## Demo
 
-![LinkED Screenshot](https://your-screenshot-url.com/screenshot.png)
+![LinkED Screenshot]()
 
 *Replace the above URL with an actual screenshot of your application.*
 
@@ -139,13 +139,13 @@ LinkED is a feature-rich social media web application built with Flask, allowing
 
 1. **Sign Up**
 
-   - Navigate to the [Sign Up](http://localhost:5000/signup) page.
+   - Navigate to the [Sign Up](http://localhost:8080/signup) page.
    - Enter a unique username, password, and an optional URL for your profile picture.
    - Submit the form to create a new account.
 
 2. **Login**
 
-   - Navigate to the [Login](http://localhost:5000/login) page.
+   - Navigate to the [Login](http://localhost:8080/login) page.
    - Enter your credentials to access your dashboard.
 
 3. **Home Feed**
@@ -223,9 +223,7 @@ Contributions are welcome! Please follow these steps:
 
 5. **Open a Pull Request**
 
-## License
 
-This project is licensed under the [MIT License](LICENSE).
 
 ## Acknowledgements
 
