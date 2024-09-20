@@ -1,188 +1,255 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile Page</title>
+{% extends "layout.html" %}
 
-    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+{% block extra_head %}
+<style>
+    .profile-container {
+        background-color: #fff;
+        max-width: 935px;
+        margin: 0 auto;
+        margin-top: 10vh;
+        padding: 30px;
+        border-radius: 3px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
 
-    <style>
-        body {
-            font-family: 'Source Sans Pro', sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+    .profile-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 44px;
+        transition: all 0.3s ease;
+    }
+
+    .profile-pic {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        margin-right: 100px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .profile-info {
+        flex: 1;
+    }
+
+    .profile-info h1 {
+        font-size: 28px;
+        font-weight: 300;
+        margin-bottom: 12px;
+        color: #262626;
+    }
+
+    .profile-info h2 {
+        font-size: 16px;
+        font-weight: 400;
+        color: #262626;
+        line-height: 1.4;
+        margin-bottom: 20px;
+    }
+
+    .edit-profile-btn {
+        background-color: transparent;
+        border: 1px solid #dbdbdb;
+        color: #262626;
+        padding: 5px 9px;
+        font-weight: 600;
+        font-size: 14px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .edit-profile-btn:hover{
+        background-color: #262626;
+        color:white;
+    }
+    .log-out {
+        background-color: transparent;
+        border: 1px solid #dbdbdb;
+        color: #da0101;
+        padding: 5px 9px;
+        font-weight: 600;
+        font-size: 14px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .log-out:hover{
+        background-color: #da0101;
+        color:white;
+    }
+
+
+    .stats {
+        display: flex;
+        margin-bottom: 20px;
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .stats div {
+        margin-right: 40px;
+    }
+
+    .stats div h4 {
+        font-size: 16px;
+        font-weight: 400;
+        color: #262626;
+    }
+
+    .profile-tabs {
+        display: flex;
+        justify-content: center;
+        border-top: 1px solid #dbdbdb;
+        margin-top: 50px;
+        position: relative;
+    }
+
+    .profile-tabs::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background-color: #dbdbdb;
+    }
+
+    .profile-tabs button {
+        background-color: transparent;
+        border: none;
+        padding: 15px 0;
+        margin: 0 30px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #8e8e8e;
+        letter-spacing: 1px;
+        cursor: pointer;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+
+    .profile-tabs button::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background-color: #262626;
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+
+    .profile-tabs button.active::after {
+        transform: scaleX(1);
+    }
+
+    .grid-section {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
+        margin-top: 20px;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .grid-section.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .grid-item {
+        aspect-ratio: 1 / 1;
+        overflow: hidden;
+        position: relative;
+        transition: all 0.3s ease;
+        opacity: 0;
+        animation: fadeInUp 0.6s ease forwards;
+    }
+
+    .grid-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .grid-item:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
         }
-
-        .profile-container {
-            background-color: #fff;
-            width: 100%;
-            max-width: 800px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            box-sizing: border-box;
+        to {
+            opacity: 1;
+            transform: translateY(0);
         }
+    }
 
-        .profile-header {
-            display: flex;
-            align-items: center;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #e0e0e0;
-        }
+    .profile-container {
+        opacity: 0;
+    }
 
-        .profile-pic {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #0a66c2;
-            margin-right: 20px;
-        }
+    .profile-header, .stats, .profile-tabs {
+        opacity: 0;
+        animation: fadeInUp 0.6s ease forwards;
+    }
 
-        .profile-info {
-            display: flex;
-            flex-direction: column;
-        }
+    .profile-header {
+        animation-delay: 0.2s;
+    }
 
-        .profile-info h1 {
-            margin: 0;
-            font-size: 28px;
-            font-weight: 600;
-        }
+    .stats {
+        animation-delay: 0.4s;
+    }
 
-        .profile-info h2 {
-            margin: 5px 0 15px;
-            font-size: 18px;
-            font-weight: 400;
-            color: #5a5a5a;
-        }
+    .profile-tabs {
+        animation-delay: 0.6s;
+    }
+</style>
+{% endblock %}
 
-        .profile-info .job-title {
-            font-size: 16px;
-            font-weight: 400;
-            color: #2b2b2b;
-        }
-
-        .edit-profile-btn {
-            background-color: #000000;
-            color: white;
-            border: none;
-            width: 120px;
-            padding: 12px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 15px;
-            margin-top: 10px;
-        }
-        .stats {
-            display: flex;
-            justify-content: space-around;
-            padding: 20px 0;
-            background-color: #fff;
-            border-top: 1px solid #e0e0e0;
-            margin-top: 20px;
-        }
-
-        .stats div {
-            text-align: center;
-        }
-
-        .stats div h4 {
-            margin: 0;
-            font-size: 22px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .stats div p {
-            margin: 0;
-            font-size: 14px;
-            color: #5a5a5a;
-        }
-
-        .profile-tabs {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
-        }
-
-        .profile-tabs button {
-            background-color: transparent;
-            border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            color: #5a5a5a;
-            border-bottom: 2px solid transparent;
-        }
-
-        .profile-tabs button.active {
-            border-bottom: 2px solid #333;
-            color: #333;
-        }
-
-        .grid-section {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            grid-gap: 10px;
-            margin-top: 20px;
-        }
-
-        .grid-item {
-            width: 100%;
-            padding-top: 100%;
-            position: relative;
-            background-color: #ddd;
-        }
-
-        .grid-item img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-    </style>
-</head>
-<body>
-
+{% block content %}
 <div class="profile-container">
     <div class="profile-header">
         <img src="{{user['pfp']}}" alt="Profile Picture" class="profile-pic">
         <div class="profile-info">
             <h1>{{user["name"]}}</h1>
-            <h2>Software Engineer | San Francisco, CA</h2>
-            <button class="edit-profile-btn">Edit Profile</button>
+            <h2>{{user.get("info", "Hello!!")}}</h2>
+            <button class="edit-profile-btn" style="display: {{none if not isown}};">Edit Profile</button>
+            <button class="log-out" onclick="window.location='/login'" style="display: {{none if not isown}}">Log Out</button>
         </div>
     </div>
 
-    <!-- Stats Section -->
     <div class="stats">
         <div>
-            <h4>{{user['connections']}}</h4>
-            <p>Connections</p>
+            <h4><strong>{{user['posts']}}</strong> posts</h4>
         </div>
         <div>
-            <h4>{{user['posts']}}</h4>
-            <p>Posts</p>
+            <h4><strong>{{user['connections']}}</strong> connections</h4>
         </div>
         <div>
-            <h4>0</h4>
-            <p>Publications</p>
+            <h4><strong>{{user['likes']}}</strong> liked posts</h4>
+        </div>
+        <div>
+            <h4><strong>{{user['comments_count']}}</strong> comments</h4>
+        </div>
+
+        <div>
+            <h4><strong>0</strong> publications</h4>
         </div>
     </div>
 
     <div class="profile-tabs">
-        <button id="posts-tab" class="active">Posts</button>
-        <button id="publications-tab">Publications</button>
+        <button id="posts-tab" class="active">POSTS</button>
+        <button id="publications-tab">PUBLICATIONS</button>
     </div>
 
     <div id="posts-section" class="grid-section">
@@ -192,9 +259,12 @@
     </div>
 
     <div id="publications-section" class="grid-section" style="display: none;">
+        <!-- Publications content here -->
     </div>
 </div>
+{% endblock %}
 
+{% block extra_scripts %}
 <script>
     const postsTab = document.getElementById('posts-tab');
     const publicationsTab = document.getElementById('publications-tab');
@@ -204,17 +274,55 @@
     postsTab.addEventListener('click', () => {
         postsTab.classList.add('active');
         publicationsTab.classList.remove('active');
-        postsSection.style.display = 'grid';
-        publicationsSection.style.display = 'none';
+        showSection(postsSection);
     });
 
     publicationsTab.addEventListener('click', () => {
         publicationsTab.classList.add('active');
         postsTab.classList.remove('active');
-        postsSection.style.display = 'none';
-        publicationsSection.style.display = 'grid';
+        showSection(publicationsSection);
+    });
+
+    function showSection(section) {
+        const sections = document.querySelectorAll('.grid-section');
+        sections.forEach(s => {
+            s.classList.remove('active');
+            s.style.display = 'none';
+        });
+        section.classList.add('active');
+        section.style.display = 'grid';
+
+        // Reset and re-apply animations for grid items
+        const gridItems = section.querySelectorAll('.grid-item');
+        gridItems.forEach((item, index) => {
+            item.style.opacity = '0';
+            item.style.animation = 'none';
+            item.offsetHeight; // Trigger reflow
+            item.style.animation = null;
+            item.style.animationDelay = `${0.1 + index * 0.1}s`;
+        });
+    }
+
+    // Page load animations
+    window.addEventListener('load', () => {
+        const profileContainer = document.querySelector('.profile-container');
+        profileContainer.style.transition = 'opacity 0.5s ease';
+        profileContainer.style.opacity = '1';
+
+        const gridItems = document.querySelectorAll('.grid-item');
+        gridItems.forEach((item, index) => {
+            item.style.animationDelay = `${0.8 + index * 0.1}s`;
+        });
+
+        showSection(postsSection);
+    });
+
+    window.addEventListener('load', () => {
+        document.querySelector('.profile-container').style.opacity = '0';
+        setTimeout(() => {
+            document.querySelector('.profile-container').style.opacity = '1';
+            showSection(postsSection);
+        }, 100);
     });
 </script>
-
-</body>
-</html>
+{% endblock %}

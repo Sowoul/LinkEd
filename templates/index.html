@@ -1,137 +1,12 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>LinkED</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <style>
-      :root {
-        --primary-color: #eb3471;
-        --background-color: #f8f9fa;
-        --text-color: #333;
-        --border-color: #e0e0e0;
-      }
+{% extends "layout.html" %}
 
-      body {
-        font-family: 'Roboto', sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: var(--background-color);
-        color: var(--text-color);
-        padding-bottom: 60px;
-        overflow-x: hidden;
-      }
-
-      .header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        background-color: #fff;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        padding: 15px 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        z-index: 1000;
-        animation: slideDown 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      }
-
-      @keyframes slideDown {
-        from { transform: translateY(-100%); }
-        to { transform: translateY(0); }
-      }
-
-      .logo {
-        font-size: 24px;
-        font-weight: 700;
-        color: var(--primary-color);
-      }
-
-      .main-container {
-        display: flex;
-        justify-content: center;
-        margin-top: 80px;
-        margin-bottom: 0;
-        transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      }
-
-      .posts-container {
-        width: 100%;
-        max-width: 600px;
-        background-color: transparent;
-      }
-
-      .post {
-        background-color: #fff;
-        border-radius: 8px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        margin-bottom: 20px;
-        overflow: hidden;
-        opacity: 0;
-        transform: translateY(50px);
-        animation: fadeInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-        transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s ease;
-      }
-
-      .post:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      }
-
-      @keyframes fadeInUp {
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      .post-header {
-        display: flex;
-        align-items: center;
-        padding: 15px;
-      }
-
-      .post-user-image {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        margin-right: 15px;
-        object-fit: cover;
-        transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      }
-
-      .post-user-image:hover {
-        transform: scale(1.1) rotate(5deg);
-      }
-
-      .post-username {
-        font-weight: 500;
-      }
-
-      .post-image {
-        max-height: 600px;
-        width: 100%;
-        object-fit: cover;
-        transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      }
-
-      .post-image:hover {
-        transform: scale(1.05);
-      }
-
-      .post-content {
-        padding: 15px;
-        line-height: 1.5;
-      }
-
+{% block extra_head %}
+<style>
       .connections {
         width: 300px;
-        background-color: #fff;
-        border-radius: 8px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        background-color: #ffffff;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         padding: 20px;
         margin-left: 20px;
         height: fit-content;
@@ -158,10 +33,12 @@
         transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       }
 
-      .connection:hover {
+      /* .connection:hover {
         transform: translateX(10px);
+        background-color: #55555555;
+        
       }
-
+ */
       .connection-user-image {
         width: 40px;
         height: 40px;
@@ -175,316 +52,322 @@
         transform: scale(1.1) rotate(10deg);
       }
 
-      .bottom-nav {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background-color: #fff;
-        box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+      .comments-section {
+        margin-top: 15px;
+        border-top: 1px solid #e0e0e0;
+        padding: 15px 10px;
+        transition: max-height 0.3s ease-out;
+        overflow: hidden;
+      }
+
+      .comment {
         display: flex;
-        justify-content: space-around;
-        padding: 12px 0;
-        z-index: 1000;
-        animation: slideUp 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      }
-
-      @keyframes slideUp {
-        from { transform: translateY(100%); }
-        to { transform: translateY(0); }
-      }
-
-      .nav-icon {
-        font-size: 22px;
-        color: var(--text-color);
-        cursor: pointer;
-        transition: color 0.3s ease, transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      }
-
-      .nav-icon:hover {
-        color: var(--primary-color);
-        transform: translateY(-5px) scale(1.1);
-      }
-
-      .modal {
-        display: none;
-        position: fixed;
-        z-index: 2000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0,0,0,0.5);
-        opacity: 0;
-        transition: opacity 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      }
-
-      .modal-content {
-        background-color: #fff;
-        margin: 10% auto;
-        padding: 20px;
-        border-radius: 8px;
-        width: 90%;
-        max-width: 500px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        transform: scale(0.8) translateY(-50px);
-        transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      }
-
-      .modal.open {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        opacity: 1;
-      }
-
-      .modal.open .modal-content {
-        transform: scale(1) translateY(0);
-      }
-
-      .modal-header {
-        font-size: 20px;
-        font-weight: 500;
         margin-bottom: 15px;
-      }
-
-      .modal-close {
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      }
-
-      .modal-close:hover {
-        transform: rotate(90deg) scale(1.2);
-      }
-
-      input[type="text"], textarea {
-        width: 95%;
         padding: 10px;
-        margin-bottom: 15px;
-        border: 1px solid var(--border-color);
-        border-radius: 4px;
-        font-size: 14px;
-        transition: border-color 0.3s ease, transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 0.3s forwards;
       }
 
-      input[type="text"]:focus, textarea:focus {
+      @keyframes fadeInUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .comment-user-image {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        margin-right: 12px;
+        object-fit: cover;
+        transition: transform 0.2s ease;
+      }
+
+      .comment:hover .comment-user-image {
+        transform: scale(1.1);
+      }
+
+      .comment-content {
+        flex: 1;
+      }
+
+      .comment-username {
+        font-weight: 600;
+        margin-right: 5px;
+        color: #333;
+      }
+
+      .comment-text {
+        margin-top: 4px;
+        color: #555;
+      }
+
+      .comment-form {
+        display: flex;
+        margin-top: 15px;
+        align-items: flex-start;
+      }
+
+      .comment-form textarea {
+        flex: 1;
+        margin-right: 10px;
+        padding: 10px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        resize: vertical;
+        min-height: 40px;
+        transition: border-color 0.2s ease;
+      }
+
+      .comment-form textarea:focus {
         border-color: var(--primary-color);
         outline: none;
+      }
+
+      .comment-form button {
+        margin-left: 10px;
+        padding: 20px 20px;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+      .comment-form button:hover {
         transform: translateY(-2px);
       }
 
-      button {
-        background-color: var(--primary-color);
-        color: #fff;
-        border: none;
-        padding: 10px 15px;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 14px;
-        transition: background-color 0.3s ease, transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      .comment-form button:active {
+        transform: translateY(0);
       }
 
-      button:hover {
-        background-color: #2980b9;
-        transform: translateY(-3px) scale(1.05);
-      }
+</style>
+{% endblock %}
 
-      @media (max-width: 768px) {
-        .main-container {
-          flex-direction: column;
-          align-items: center;
+{% block content %}
+<div class="main-container">
+  <div class="posts-container" id="posts"></div>
+  <div class="connections">
+    <h3>Connections</h3>
+    <div id="connectionsList"></div>
+  </div>
+  <div id="loading" style="display: none; text-align: center; padding: 20px;">
+    <p>Loading more posts...</p>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  let feed = [];
+  let currentPage = 1;
+  const perPage = 7;
+  let isLoading = false;
+  let hasNext = true;
+
+  function loadFeed(page) {
+    if (isLoading || !hasNext) return;
+    isLoading = true;
+    document.getElementById("loading").style.display = "block";
+
+    fetch(`/get_feed?page=${page}&per_page=${perPage}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.error) {
+          console.error("Error loading feed:", data.error);
+          return;
         }
+        feed = feed.concat(data.posts);
+        displayPosts(data.posts);
+        hasNext = data.has_next;
+        currentPage++;
+        isLoading = false;
+        document.getElementById("loading").style.display = "none";
+      })
+      .catch(error => {
+        console.error("Error loading feed:", error);
+        isLoading = false;
+        document.getElementById("loading").style.display = "none";
+      });
+  }
 
-        .connections {
-          width: 100%;
-          max-width: 600px;
-          margin-left: 0;
-          margin-top: 20px;
+  function displayPosts(posts) {
+    const postsContainer = document.getElementById("posts");
+    posts.forEach((post, index) => {
+      const postElement = document.createElement("div");
+      postElement.className = "post";
+      postElement.style.animationDelay = `${(feed.length - perPage + index) * 0.1}s`;
+      postElement.innerHTML = `
+        <div class="post-header">
+          <img src="${post.pfp}" alt="${post.name}" class="post-user-image">
+          <span class="post-username">${post.name}</span>
+        </div>
+        ${post.content ? `<div class="post-content">${post.content}</div>` : ""}
+        ${post.link ? `<img src="${post.link}" alt="Post image" class="post-image">` : ""}
+        <div class="post-actions">
+          <span class="post-action"><i class="far fa-heart" onclick="likePost('${post.id}')"></i> <span id="likes-${post.id}">${post.likes}</span></span>
+          <span class="post-action"><i class="far fa-comment" onclick="toggleComments('${post.id}')"></i> ${post.comments_count}</span>
+          <span class="post-action"><i class="far fa-share-square" onclick="share('${post.id}')"></i> Share</span>
+        </div>
+        <div class="comments-section" id="comments-${post.id}" style="display: none;">
+          <div class="comments-list" id="comments-list-${post.id}"></div>
+          <div class="comment-form">
+            <textarea id="comment-input-${post.id}" placeholder="Write a comment..."></textarea>
+            <button onclick="submitComment('${post.id}')">Post</button>
+          </div>
+        </div>
+      `;
+      postsContainer.appendChild(postElement);
+    });
+  }
+
+  function share(post_id) {
+    console.log(post_id)
+    const postUrl = `${window.location.origin}/post/${post_id}`;
+    navigator.clipboard.writeText(postUrl)
+      .then(() => {
+        alert('Link copied to clipboard!');
+      })
+      .catch(err => {
+        console.error('Failed to copy link: ', err);
+        alert('Failed to copy link. Please try again.');
+      });
+  }
+  function likePost(post_id) {
+    fetch("/like_post", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: `post_id=${post_id}`,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          const likesElement = document.getElementById(`likes-${post_id}`);
+          likesElement.textContent = data.likes;
+        } else {
+          console.error("Failed to like post:", data.message);
         }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="header">
-      <div class="logo">LinkED</div>
-    </div>
+      })
+      .catch((error) => console.error("Error liking post:", error));
+  }
 
-    <div class="main-container">
-      <div class="posts-container" id="posts"></div>
-      <div class="connections">
-        <h3>Connections</h3>
-        <div id="connectionsList"></div>
-      </div>
-    </div>
+  function toggleComments(postId) {
+    const commentsSection = document.getElementById(`comments-${postId}`);
+    if (commentsSection.style.display === "none") {
+      commentsSection.style.display = "block";
+      loadComments(postId);
+    } else {
+      commentsSection.style.display = "none";
+    }
+  }
 
-    <div class="bottom-nav">
-      <div class="nav-icon"><i class="fas fa-home"></i></div>
-      <div class="nav-icon" id="bottom-search">
-        <i class="fas fa-search"></i>
-      </div>
-      <div class="nav-icon" id="add-post">
-        <i class="fas fa-plus-square"></i>
-      </div>
-      <div class="nav-icon" ><i class="fas fa-heart"></i></div>
-      <div class="nav-icon" id="profile"><i class="fas fa-user"></i></div>
-    </div>
+  function loadComments(postId) {
+    const commentsList = document.getElementById(`comments-list-${postId}`);
+    commentsList.innerHTML = '<p>Loading comments...</p>';
 
-    <div id="postModal" class="modal">
-      <div class="modal-content">
-        <span class="modal-close" onclick="closeModal('postModal')">&times;</span>
-        <div class="modal-header">New Post</div>
-        <input type="text" id="postLink" placeholder="Enter post link">
-        <textarea id="postContent" placeholder="Write a post..." rows="5"></textarea>
-        <button onclick="submitPost()">Upload</button>
-      </div>
-    </div>
-
-    <div id="searchModal" class="modal">
-      <div class="modal-content">
-        <span class="modal-close" onclick="closeModal('searchModal')">&times;</span>
-        <div class="modal-header">Search Users</div>
-        <input type="text" id="searchTerm" placeholder="Enter username">
-        <button onclick="submitSearch()">Search</button>
-      </div>
-    </div>
-
-
-    <script>
-      let feed = [];
-
-      function loadFeed() {
-        fetch("/get_feed")
-          .then((response) => response.json())
-          .then((data) => {
-            feed = data;
-            displayPosts();
-          })
-          .catch((error) => console.error("Error loading feed:", error));
-      }
-
-      function displayPosts() {
-        const postsContainer = document.getElementById("posts");
-        postsContainer.innerHTML = "";
-        console.log(feed);
-        feed.forEach((post, index) => {
-          const postElement = document.createElement("div");
-          postElement.className = "post";
-          postElement.style.animationDelay = `${index * 0.1}s`;
-          postElement.innerHTML = `
-            <div class="post-header">
-              <img src="${post.pfp}" alt="${post.name}" class="post-user-image">
-              <span class="post-username">${post.name}</span>
+    fetch(`/get_comments/${postId}`)
+      .then(response => response.json())
+      .then(comments => {
+        commentsList.innerHTML = '';
+        comments.forEach(comment => {
+          const commentElement = document.createElement('div');
+          commentElement.className = 'comment';
+          commentElement.innerHTML = `
+            <img src="${comment.pfp}" alt="${comment.user_name}" class="comment-user-image">
+            <div class="comment-content">
+              <span class="comment-username" onclick='window.location="/profile/${comment.user_name}"'>${comment.user_name}</span>
+              <p class="comment-text">${comment.content}</p>
             </div>
-            ${post.content ? `<div class="post-content">${post.content}</div>` : ""}
-            <img src="${post.link}" alt="Post image" class="post-image">
           `;
-          postsContainer.appendChild(postElement);
+          commentsList.appendChild(commentElement);
         });
-      }
+      })
+      .catch(error => {
+        console.error("Error loading comments:", error);
+        commentsList.innerHTML = '<p>Error loading comments. Please try again.</p>';
+      });
+  }
 
-      function searchUser(searchTerm) {
-        fetch("/add_connection", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          body: `to_connect=${searchTerm}`,
+  function submitComment(postId) {
+    const commentInput = document.getElementById(`comment-input-${postId}`);
+    const comment = commentInput.value.trim();
+    if (comment) {
+      fetch("/add_comment", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: `post_id=${postId}&comment=${encodeURIComponent(comment)}`,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            commentInput.value = '';
+            loadComments(postId);
+          } else {
+            console.error("Failed to add comment:", data.message);
+          }
         })
-          .then((response) => {
-            if (response.ok) {
-              loadFeed();
-              alert("Connection added successfully");
-              closeModal("searchModal");
-              updateConnections();
-            } else {
-              alert("Failed to add connection");
-            }
-          })
-          .catch((error) => console.error("Error adding connection:", error));
-      }
+        .catch((error) => console.error("Error adding comment:", error));
+    }
+  }
 
-      function updateConnections() {
-        const connectionsList = document.getElementById("connectionsList");
-        connectionsList.innerHTML = ``;
-        fetch("/get_connections")
-          .then((response) => response.json())
-          .then((connections) => {
-            connections.forEach((connection, index) => {
-              const connectionElement = document.createElement("div");
-              connectionElement.className = "connection";
-              connectionElement.style.animationDelay = `${index * 0.1}s`;
-              connectionElement.innerHTML = `
-                <img src="${connection.pfp}" alt="Post image" class="connection-user-image">
-                <span>${connection.name}</span>
-              `;
-              connectionsList.appendChild(connectionElement);
-            });
-          })
-          .catch((error) => console.error("Error loading connections:", error));
-      }
-
-      function openModal(modalId) {
-        document.getElementById(modalId).classList.add("open");
-      }
-
-      function closeModal(modalId) {
-        document.getElementById(modalId).classList.remove("open");
-      }
-
-      function submitPost() {
-        const postLink = document.getElementById("postLink").value;
-        const postContent = document.getElementById("postContent").value;
-        if (postLink) {
-          fetch("/add_post", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: `file=${postLink}&content=${postContent}`,
-          })
-            .then((response) => {
-              if (response.ok) {
-                alert("Post added successfully");
-                closeModal("postModal");
-                loadFeed();
-              } else {
-                alert("Failed to add post");
-              }
-            })
-            .catch((error) => console.error("Error adding post:", error));
+  function searchUser(searchTerm) {
+    fetch("/add_connection", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: `to_connect=${searchTerm}`,
+    })
+      .then((response) => {
+        if (response.ok) {
+          loadFeed(currentPage);
+          alert("Connection added successfully");
+          closeModal("searchModal");
+          window.location='/home'
+        } else {
+          alert("Failed to add connection");
         }
-      }
+      })
+      .catch((error) => console.error("Error adding connection:", error));
+  }
 
-      function submitSearch() {
-        const searchTerm = document.getElementById("searchTerm").value;
-        if (searchTerm) {
-          searchUser(searchTerm);
-        }
-      }
-
-      document
-        .getElementById("add-post")
-        .addEventListener("click", function () {
-          openModal("postModal");
+  function updateConnections() {
+    const connectionsList = document.getElementById("connectionsList");
+    connectionsList.innerHTML = ``;
+    fetch("/get_connections")
+      .then((response) => response.json())
+      .then((connections) => {
+        connections.forEach((connection, index) => {
+          const connectionElement = document.createElement("div");
+          connectionElement.className = "connection";
+          connectionElement.style.animationDelay = `${index * 0.1}s`;
+          connectionElement.innerHTML = `
+            <img src="${connection.pfp}" alt="Post image" class="connection-user-image">
+            <span onclick="window.location='/profile/${connection.name}'">${connection.name}</span>
+          `;
+          connectionsList.appendChild(connectionElement);
         });
+      })
+      .catch((error) => console.error("Error loading connections:", error));
+  }
 
-      document
-        .getElementById("bottom-search")
-        .addEventListener("click", function () {
-          openModal("searchModal");
-        });
-        document
-        .getElementById("profile")
-        .addEventListener("click", function () {
-          window.location="/profile"
-        });
+  function handleScroll() {
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 100) {
+      loadFeed(currentPage);
+    }
+  }
 
-
-      loadFeed();
-      updateConnections();
-    </script>
-  </body>
-</html>
+  window.addEventListener('scroll', handleScroll);
+  loadFeed(currentPage);
+  updateConnections();
+</script>
+{% endblock %}
