@@ -1,0 +1,194 @@
+{% extends "layout.html" %}
+
+{% block extra_head %}
+<style>
+    .single-post-container {
+        max-width: 600px;
+        margin: 100px auto 0;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+
+    .post-header {
+        display: flex;
+        align-items: center;
+        padding: 20px;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .post-user-image {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin-right: 15px;
+        object-fit: cover;
+    }
+
+    .post-username {
+        font-weight: 600;
+        font-size: 18px;
+    }
+
+    .post-content {
+        padding: 20px;
+        line-height: 1.6;
+    }
+
+    .post-image {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .post-actions {
+        display: flex;
+        justify-content: space-around;
+        padding: 15px;
+        border-top: 1px solid #e0e0e0;
+    }
+
+    .post-action {
+        color: #65676b;
+        font-size: 16px;
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
+
+    .post-action:hover {
+        color: var(--primary-color);
+    }
+
+    .comments-section {
+        padding: 20px;
+        border-top: 1px solid #e0e0e0;
+    }
+
+    .comment {
+        margin-bottom: 15px;
+        padding: 10px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .comment-user-image {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        margin-right: 12px;
+        object-fit: cover;
+    }
+
+    .comment-username {
+        font-weight: 600;
+        margin-right: 5px;
+    }
+
+    .comment-form {
+        display: flex;
+        margin-top: 20px;
+    }
+
+    .comment-form textarea {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        resize: vertical;
+    }
+
+    .comment-form button {
+        margin-left: 10px;
+        padding: 10px 20px;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="single-post-container">
+    <div class="post-header">
+        <img src="{{ post.pfp }}" alt="{{ post.name }}" class="post-user-image">
+        <span class="post-username">{{ post.name }}</span>
+    </div>
+    {% if post.content %}
+    <div class="post-content">{{ post.content }}</div>
+    {% endif %}
+    {% if post.link %}
+    <img src="{{ post.link }}" alt="Post image" class="post-image">
+    {% endif %}
+    <div class="post-actions">
+        <span class="post-action"><i class="far fa-heart" onclick="likePost('{{ post.id }}')"></i> <span id="likes-{{ post.id }}">{{ post.likes }}</span></span>
+        <span class="post-action"><i class="far fa-comment"></i> {{ post.comments_count }}</span>
+        <span class="post-action"><i class="far fa-share-square"></i> Share</span>
+    </div>
+    <div class="comments-section">
+        <h3>Comments</h3>
+        <div id="comments-list">
+            {% for comment in comments %}
+            <div class="comment">
+                <img src="{{ comment['pfp'] }}" alt="{{ comment['user_name'] }}" class="comment-user-image">
+                <span class="comment-username">{{ comment["user_name"] }}</span>
+                <p>{{ comment["content"] }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="comment-form">
+            <textarea id="comment-input" placeholder="Write a comment..."></textarea>
+            <button onclick="submitComment('{{ post.id }}')">Post</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    function likePost(postId) {
+        fetch("/like_post", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: `post_id=${postId}`,
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.success) {
+                const likesElement = document.getElementById(`likes-${postId}`);
+                likesElement.textContent = data.likes;
+            } else {
+                console.error("Failed to like post:", data.message);
+            }
+        })
+        .catch((error) => console.error("Error liking post:", error));
+    }
+
+    function submitComment(postId) {
+        const commentInput = document.getElementById("comment-input");
+        const comment = commentInput.value.trim();
+        if (comment) {
+            fetch("/add_comment", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: `post_id=${postId}&comment=${encodeURIComponent(comment)}`,
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    commentInput.value = '';
+                    location.reload();
+                } else {
+                    console.error("Failed to add comment:", data.message);
+                }
+            })
+            .catch((error) => console.error("Error adding comment:", error));
+        }
+    }
+</script>
+{% endblock %}
